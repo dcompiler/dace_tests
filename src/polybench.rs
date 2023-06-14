@@ -18,22 +18,22 @@ pub fn lu(n: usize) -> Rc<Node>{
         vec![ijk[1] as usize, ijk[1] as usize]
     });
 
-    let k_loop_ref_j = loop_node!("k", 0 => move |ijk| ijk[1]);
+    let k_loop_ref_j = loop_node!("k", 0 => move |ijk:&[i32]| ijk[1]);
     Node::extend_loop_body(&k_loop_ref_j, &ref_a_ik);
     Node::extend_loop_body(&k_loop_ref_j, &ref_a_kj);
     Node::extend_loop_body(&k_loop_ref_j, &ref_a_ij);
 
-    let j_loop_lower_ref = loop_node!("j", 0 => move |ijk| ijk[0]);
+    let j_loop_lower_ref = loop_node!("j", 0 => move |ijk:&[i32]| ijk[0]);
     Node::extend_loop_body(&j_loop_lower_ref, &k_loop_ref_j);
     Node::extend_loop_body(&j_loop_lower_ref, &ref_a_jj);
     Node::extend_loop_body(&j_loop_lower_ref, &ref_a_ij);
 
-    let k_loop_ref_i = loop_node!("k", 0 => move |ijk| ijk[0]);
+    let k_loop_ref_i = loop_node!("k", 0 => move |ijk:&[i32]| ijk[0]);
     Node::extend_loop_body(&k_loop_ref_i, &ref_a_ik);
     Node::extend_loop_body(&k_loop_ref_i, &ref_a_kj);
     Node::extend_loop_body(&k_loop_ref_i, &ref_a_ij);
 
-    let j_loop_upper_ref = loop_node!("j", move |ijk| ijk[0] => ubound);
+    let j_loop_upper_ref = loop_node!("j", move |ijk:&[i32]| ijk[0] => ubound);
     Node::extend_loop_body(&j_loop_upper_ref, &k_loop_ref_i);
 
     let i_loop_ref = Node::new_single_loop("i", 0, ubound);
@@ -52,6 +52,6 @@ mod tests {
     #[test]
     fn lu_test() {
         let mm = lu(100);
-        assert_eq!(mm.node_count(), 6);
+        assert_eq!(mm.node_count(), 13);
     }
 }
