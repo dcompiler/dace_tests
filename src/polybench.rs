@@ -1,6 +1,7 @@
 use dace::ast::Node;
+use dace::ast::Stmt;
 use std::rc::Rc;
-
+use dace::loop_node;
 
 
 fn trmm_trace(M: usize, N:usize) -> Rc<Node> {
@@ -39,7 +40,7 @@ fn trmm_trace(M: usize, N:usize) -> Rc<Node> {
 pub fn mvt(n: usize) -> Rc<Node> {
     // n : usize is size of array
     let ubound = n as i32;
-    
+
     // creating x1[i] = x1[i] + a[i][j] * y1[j];
     let s_ref_x1: Rc<Node> = Node::new_ref("x1", vec![n], |ij| {vec![ij[0] as usize]});
     let s_ref_a1 = Node::new_ref("a1", vec![n,n], |ij| {vec![ij[0] as usize, ij[1] as usize]});
@@ -50,7 +51,7 @@ pub fn mvt(n: usize) -> Rc<Node> {
     Node::extend_loop_body(&j_loop_ref, &s_ref_x1);
     Node::extend_loop_body(&j_loop_ref, &s_ref_a1);
     Node::extend_loop_body(&j_loop_ref, &s_ref_y1);
-    Node::extend_loop_body(&j_loop_ref, &s_ref_x1);   
+    Node::extend_loop_body(&j_loop_ref, &s_ref_x1);
 
     // creating loop i = 0, n
     let i_loop_ref = Node::new_single_loop("i", 0, ubound);
@@ -66,7 +67,7 @@ pub fn mvt(n: usize) -> Rc<Node> {
     Node::extend_loop_body(&k_loop_ref, &s_ref_x2);
     Node::extend_loop_body(&k_loop_ref, &s_ref_a2);
     Node::extend_loop_body(&k_loop_ref, &s_ref_y2);
-    Node::extend_loop_body(&k_loop_ref, &s_ref_x2);    
+    Node::extend_loop_body(&k_loop_ref, &s_ref_x2);
 
     // creating loop m = 0, n
     let m_loop_ref = Node::new_single_loop("m", 0, ubound);
@@ -108,7 +109,7 @@ pub fn trisolv(n: usize) -> Rc<Node> {
     Node::extend_loop_body(&i_loop_ref, &s_ref_x1);
 
     i_loop_ref
-    
+
 }
 
 pub fn syrk(n: usize, m: usize) -> Rc<Node> {
